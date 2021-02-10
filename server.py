@@ -22,23 +22,31 @@ while True:
     sock_service, addr_client = sock_listen.accept()
     print("\nConnessione ricevuta da " + str(addr_client))
     print("\nAspetto di ricevere i dati ")
-    contConn=0
     while True:
         dati = sock_service.recv(2048)
-        contConn+=1
         if not dati:
             print("Fine dati dal client. Reset")
             break
         
-        dati = dati.decode()
+        dati = dati.decode()#decodifichiamo da file binario a file testo
         print("Ricevuto: '%s'" % dati)
         if dati=='0':
             print("Chiudo la connessione con " + str(addr_client))
             break
-        dati = "Risposta a : " + str(addr_client) + ". Il valore del contatore è : " + str(contConn)
 
-        dati = dati.encode()
+        op, num1, num2 = dati.split(";")#assegna a 3 variabili i tre valori separati dal punto e virgola nella variabile dati
+        #dobbiamo trasformare in float le variabili che sono stringhe per svolgere le operazioni
+        if(op == "più"):
+            print(float(num1) + float(num2))
+        elif(op == "meno"):
+            print(float(num1) - float(num2))
+        elif(op == "per"):
+            print(float(num1) * float(num2))
+        elif(op == "diviso"):
+            print(float(num1) / float(num2))
+
+        dati = dati.encode()#trasformiamo ancora in file binario per ri-inviarlo al client
 
         sock_service.send(dati)
 
-    sock_service.close()
+sock_service.close()
