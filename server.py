@@ -18,7 +18,7 @@ def ricevi_comandi(sock_service, addr_client):
     print("Avviato il thread per servire le richieste da %s" % str(addr_client))
     print("Aspetto di ricevere i dati dell'operazione ")
     while True:
-        dati = sock_service.recv(2048)
+        dati = sock_service.recv(2048) 
         if not dati:
             print("Fine dati dal client. Reset")
             break
@@ -55,11 +55,11 @@ def ricevi_comandi(sock_service, addr_client):
 
 def ricevi_connessioni(sock_listen):
     while True:
-        sock_service, addr_client = sock_listen.accept()
+        sock_service, addr_client = sock_listen.accept() #accetta una nuova connessione, sock_service parla con il client, sock_listen sposta la connessione in un altro socket
         print("\nConnessione ricevuta da %s" % str(addr_client))
         print("Creo un thread per servire le richieste")
         try:
-            Thread(target=ricevi_comandi, args=(sock_service, addr_client)).start()
+            Thread(target=ricevi_comandi, args=(sock_service, addr_client)).start() #creo un nuovo Thread per gestire il socket
         except:
             print("Il thread non si avvia")
             sock_listen.close()
@@ -69,7 +69,7 @@ def ricevi_connessioni(sock_listen):
 def avvia_server(indirizzo, porta):
     try:
         # Crea la socket
-        sock_listen = socket.socket()
+        sock_listen = socket.socket() #socket che ascolta le connessioni
         # Opzionale: permette di riavviare subito il codice,
         # altrimenti bisognerebbe aspettare 2-4 minuti prima di poter riutilizzare(bindare) la stessa porta
         sock_listen.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -81,7 +81,7 @@ def avvia_server(indirizzo, porta):
     except socket.error as errore:
         print(f"Qualcosa è andato storto... \n{errore}")
 
-    ricevi_connessioni(sock_listen)
+    ricevi_connessioni(sock_listen) # accetta nuove connessioni
 
 
 if __name__ == '__main__':
